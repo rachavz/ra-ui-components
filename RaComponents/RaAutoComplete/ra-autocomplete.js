@@ -1,5 +1,5 @@
 /*
- * File: ra-auto-complete.js
+ * File: ra-autocomplete.js
  * Author: Raúl H. Chávez V.
  * Date: 2024-05-25
  * Description: This JS file provides autocomplete functionality to enhance user interactivity and experience by suggesting options while typing in an input field.
@@ -28,67 +28,47 @@
  * SOFTWARE.
  */
 
-class RaAutoComplete extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({ mode: "open" });
-
-        const container = document.createElement('div');
-        container.classList.add('ra-auto-complete-container');
-
-        this.input = document.createElement('input');
-        this.input.type = 'text';
-        this.input.classList.add('ra-auto-complete-input');
-        this.input.placeholder = this.getAttribute('placeholder') || 'Buscar...';
-        this.input.setAttribute('autocomplete', 'off');
-
-
-        this.list = document.createElement('div');
-        this.list.classList.add('ra-auto-complete-list');
-
-        container.appendChild(this.input);
-        container.appendChild(this.list);
-        this.shadowRoot.appendChild(container);
+class RaAutoComplete {
+    constructor(element, options) {
+        this._element = element;
+        this._options = Object.assign({
+            placeholder: 'Buscar...',
+        }, options);
 
         this.currentItems = [];
         this.currentPage = 1;
         this.itemsPerPage = 10;
         this.loading = false;
 
+        this._element.classList.add('ra-autocomplete-container');
+
+        this.input = document.createElement('input');
+        this.input.type = 'text';
+        this.input.classList.add('ra-autocomplete-input');
+        this.input.placeholder = this._options.placeholder;
+        this.input.setAttribute('autocomplete', 'off');
         this.input.addEventListener('input', () => this._onInput());
+        this.input.addEventListener('keydown', (e) => this._onKeyDown(e));
+        this._element.appendChild(this.input);
+
+        this.list = document.createElement('div');
+        this.list.classList.add('ra-autocomplete-list');
         this.list.addEventListener('scroll', () => this._onScroll());
         this.list.addEventListener('click', (e) => this._onItemClick(e));
-        this.input.addEventListener('keydown', (e) => this._onKeyDown(e));
-
-        const style = document.createElement('style');
-        style.textContent = `@import url('/ra-auto-complete.css');`;
-        this.shadowRoot.appendChild(style);
+        this._element.appendChild(this.list);        
 
         document.addEventListener('click', (e) => this._handleClickOutside(e));
     }
 
-    set onSearch(func) {
-        this._search = func;
-    }
-
-    get onSearch() {
-        return this._search;
+    set onFetchData(func) {
+        this._onFechData = func;
     }
 
     set onValueChanged(func) {
         this._valueChanged = func;
     }
-
-    get onValueChanged() {
-        return this._valueChanged;
-    }
-
     set itemTemplate(func) {
         this._ItemTemplate = func;
-    }
-
-    get itemTemplate() {
-        return this._ItemTemplate;
     }
 
     setValue(id, value) {
@@ -107,7 +87,7 @@ class RaAutoComplete extends HTMLElement {
 
 
     _handleClickOutside(event) {
-        if (!this.contains(event.target)) {
+        if (!this._element.contains(event.target)) {
             this.list.innerHTML = '';
         }
     }
@@ -116,19 +96,19 @@ class RaAutoComplete extends HTMLElement {
         this.currentPage = 1;
         this.currentItems = [];
         this.list.innerHTML = '';
-        this._fetchItems(this.input.value, this.currentPage);
+        this._fetchData(this.input.value, this.currentPage);
     }
 
     _onScroll() {
         if (this.list.scrollTop + this.list.clientHeight >= this.list.scrollHeight) {
             if (!this.loading) {
-                this._fetchItems(this.input.value, ++this.currentPage);
+                this._fetchData(this.input.value, ++this.currentPage);
             }
         }
     }
 
     _onItemClick(e) {
-        if (e.target.classList.contains('ra-auto-complete-item')) {
+        if (e.target.classList.contains('ra-autocomplete-item')) {
             this.input.dataset.id = e.target.dataset.id;
             this.input.value = e.target.textContent;
             this.list.innerHTML = '';
@@ -147,7 +127,7 @@ class RaAutoComplete extends HTMLElement {
         } else if (e.key === 'Escape') {
             this.list.innerHTML = '';
         } else if (e.key === 'Enter' || e.key === 'Tab') {
-            const selected = this.list.querySelector('.ra-auto-complete-item.selected');
+            const selected = this.list.querySelector('.ra-autocomplete-item-selected');
             if (selected) {
                 this.input.dataset.id = e.target.dataset.id;
                 this.input.value = e.target.textContent;
@@ -166,18 +146,18 @@ class RaAutoComplete extends HTMLElement {
     }
 
     _moveSelection(step) {
-        const items = this.list.querySelectorAll('.ra-auto-complete-item');
-        let index = Array.from(items).findIndex(item => item.classList.contains('selected'));
+        const items = this.list.querySelectorAll('.ra-autocomplete-item');
+        let index = Array.from(items).findIndex(item => item.classList.contains('ra-autocomplete-item-selected'));
         index = Math.max(index + step, 0);
         index = Math.min(index, items.length - 1);
-        items.forEach(item => item.classList.remove('selected'));
-        items[index].classList.add('selected');
+        items.forEach(item => item.classList.remove('ra-autocomplete-item-selected'));
+        items[index].classList.add('ra-autocomplete-item-selected');
     }
 
-    _fetchItems(query, page) {
-        if (!this._search) return;
+    _fetchData(query, page) {
+        if (!this._onFechData) return;
         this.loading = true;
-        this._search(query, page, this.itemsPerPage)
+        this._onFechData(query, page, this.itemsPerPage)
             .then(items => {
                 if (items && items.length > 0) {
                     this.currentItems = this.currentItems.concat(items);
@@ -192,9 +172,7 @@ class RaAutoComplete extends HTMLElement {
         if (this._ItemTemplate) {
             this.list.innerHTML = items.map(item => this._ItemTemplate(item)).join('');
         } else {
-            this.list.innerHTML = items.map(item => `<div class="ra-auto-complete-item" data-id="${item.id}">${item.text}</div>`).join('');
+            this.list.innerHTML = items.map(item => `<div class="ra-autocomplete-item" data-id="${item.id}">${item.text}</div>`).join('');
         }
     }
 }
-
-customElements.define('ra-auto-complete', RaAutoComplete);

@@ -7,7 +7,7 @@
  * Licencia:
  * MIT License
  *
- * Copyright (c) 2024 Raúl H. Chávez V.
+ * Copyright (c) Raúl H. Chávez V.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,29 +28,26 @@
  * SOFTWARE.
  */
 
-input {
+ input {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
 
-.ra-auto-complete-container {
+.ra-autocomplete-container {
     position: relative;
     width: 300px;
 }
 
-.ra-auto-complete-input {
+.ra-autocomplete-input {
     border: 1px solid transparent;
     background-color: #f1f1f1;
     padding: 10px;
     font-size: 16px;
     width: 100%;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
 }
 
-.ra-auto-complete-list {
+.ra-autocomplete-list {
     position: absolute;
     /*border: 1px solid #d4d4d4;*/
     border-top: none;
@@ -61,16 +58,16 @@ input {
     background-color: #fff;
 }
 
-.ra-auto-complete-item {
+.ra-autocomplete-item {
     padding: 10px;
     cursor: pointer;
 }
 
-    .ra-auto-complete-item:hover {
+    .ra-autocomplete-item:hover {
         background-color: #e9e9e9;
     }
 
-    .ra-auto-complete-item.selected {
+    .ra-autocomplete-item-selected {
         background-color: DodgerBlue;
         color: #fff;
     }

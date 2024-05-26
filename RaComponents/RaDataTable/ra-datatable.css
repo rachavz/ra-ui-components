@@ -1,9 +1,9 @@
 /*
- * File: ra-data-table.js
+ * File: ra-data-table.css
  * Author: Raúl H. Chávez V.
  * Date: 2024-05-25
- * Description: This JS file provides a custom HTML element to display data in a table format with pagination, sorting, and filtering capabilities.
- * 
+ * Description: This CSS file provides styles and aesthetics for a data table, enhancing the user experience by displaying data in a structured and organized way.
+ *
  * MIT License
  *
  * Copyright (c) 2024 Raúl H. Chávez V.
@@ -26,3 +26,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+ .ra-datatable {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+    .ra-datatable th, ra-datatable td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .ra-datatable th {
+        cursor: pointer;
+        background-color: #f2f2f2;
+    }
+
+    .ra-selected-cell {
+        background-color: lightyellow;
+    }
