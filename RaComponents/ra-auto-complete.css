@@ -1,0 +1,47 @@
+
+input {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.ra-auto-complete-container {
+    position: relative;
+    width: 300px;
+}
+
+.ra-auto-complete-input {
+    border: 1px solid transparent;
+    background-color: #f1f1f1;
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.ra-auto-complete-list {
+    position: absolute;
+    /*border: 1px solid #d4d4d4;*/
+    border-top: none;
+    overflow-y: auto;
+    max-height: 200px;
+    width: 100%;
+    z-index: 1;
+    background-color: #fff;
+}
+
+.ra-auto-complete-item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+    .ra-auto-complete-item:hover {
+        background-color: #e9e9e9;
+    }
+
+    .ra-auto-complete-item.selected {
+        background-color: DodgerBlue;
+        color: #fff;
+    }
